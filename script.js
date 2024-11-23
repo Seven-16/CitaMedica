@@ -50,19 +50,19 @@ document.getElementById('citaForm').addEventListener('submit', function (event) 
 });
 
 // esto para actualizar
-//function actualizar() {
- // const citasUl = document.getElementById('citas');
- // citasUl.innerHTML = '';
-  //citas.forEach((cita) => {
-   // const li = document.createElement('li');
-   // li.innerHTML = `
-    //  <strong>${cita.nombre}</strong> - ${cita.fecha} ${cita.hora}
-   //   <button onclick="editar(${cita.id})">Editar</button>
-    //  <button onclick="eliminar(${cita.id})">Eliminar</button>
-   // `;
-   // citasUl.appendChild(li);
-   // });
- // }
+function actualizar() {
+ const citasUl = document.getElementById('citas');
+  citasUl.innerHTML = '';
+  citas.forEach((cita) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+     <strong>${cita.nombre}</strong> - ${cita.fecha} ${cita.hora}
+      <button onclick="editar(${cita.id})">Editar</button>
+     <button onclick="eliminar(${cita.id})">Eliminar</button>
+   `;
+   citasUl.appendChild(li);
+   });
+ }
 
 // Esto es para editar
 function editarCita(id) {
