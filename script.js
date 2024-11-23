@@ -60,6 +60,7 @@ document.getElementById('citaForm').addEventListener('submit', function (event) 
   alert(id ? 'Cita editada.' : 'Cita guardada.');
 });
 
+
 function editarCita(id) {
   const cita = citas.find(c => c.id === id);
   if (cita) {
