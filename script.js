@@ -1,5 +1,33 @@
 
+
 let citas = [];
+
+// Esto cuando inicia carga las citas del localstorage
+document.addEventListener('DOMContentLoaded', function () {
+  const citasGuardadas = localStorage.getItem('citas');
+  if (citasGuardadas) {
+    citas = JSON.parse(citasGuardadas);
+    actualizarCitas();
+  }
+});
+
+// Esto es para guardar las citas en el local storage
+//cuando se actualice la lista debe cargar
+function actualizarCitas() {
+  const citasUl = document.getElementById('citas');
+  citasUl.innerHTML = '';
+  citas.forEach((cita) => {
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <strong>${cita.nombre}</strong> - ${cita.fecha} ${cita.hora}
+      <button onclick="editarCita(${cita.id})">Editar</button>
+      <button onclick="eliminarCita(${cita.id})">Eliminar</button>
+    `;
+    citasUl.appendChild(li);
+  });
+  localStorage.setItem('citas', JSON.stringify(citas));
+}
+
 
 // guardado
 document.getElementById('citaForm').addEventListener('submit', function (event) {
@@ -13,25 +41,28 @@ document.getElementById('citaForm').addEventListener('submit', function (event) 
 
   const cita = { id: Date.now(), nombre, correo, telefono, fecha, hora };
   citas.push(cita);
+
+  //Alerta para la cita
+  alert(`Cita agendada:\n\nNombre: ${nombre}\nCorreo: ${correo}\nTeléfono: ${telefono}\nFecha: ${fecha}\nHora: ${hora}`);
+  
   actualizar();
-  alert('Cita guardada.');
   document.getElementById('citaForm').reset();
 });
 
 // esto para actualizar
-function actualizar() {
-  const citasUl = document.getElementById('citas');
-  citasUl.innerHTML = '';
-  citas.forEach((cita) => {
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <strong>${cita.nombre}</strong> - ${cita.fecha} ${cita.hora}
-      <button onclick="editar(${cita.id})">Editar</button>
-      <button onclick="eliminar(${cita.id})">Eliminar</button>
-    `;
-    citasUl.appendChild(li);
-  });
-}
+//function actualizar() {
+ // const citasUl = document.getElementById('citas');
+ // citasUl.innerHTML = '';
+  //citas.forEach((cita) => {
+   // const li = document.createElement('li');
+   // li.innerHTML = `
+    //  <strong>${cita.nombre}</strong> - ${cita.fecha} ${cita.hora}
+   //   <button onclick="editar(${cita.id})">Editar</button>
+    //  <button onclick="eliminar(${cita.id})">Eliminar</button>
+   // `;
+   // citasUl.appendChild(li);
+   // });
+ // }
 
 // Esto es para editar
 function editarCita(id) {
@@ -53,17 +84,3 @@ function eliminarCita(id) {
   citas = citas.filter((c) => c.id !== id);
   actualizar();
 }
-
-document.getElementById('citaForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-  
-    const nombre = document.getElementById('nombre').value;
-    const correo = document.getElementById('correo').value;
-    const telefono = document.getElementById('telefono').value;
-    const fecha = document.getElementById('fecha').value;
-    const hora = document.getElementById('hora').value;
-  
-    alert(`Cita agendada:\n\nNombre: ${nombre}\nCorreo: ${correo}\nTeléfono: ${telefono}\nFecha: ${fecha}\nHora: ${hora}`);
-  });
-  
-
