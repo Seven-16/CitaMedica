@@ -1,8 +1,6 @@
-
-
 let citas = [];
 
-// Esto cuando inicia carga las citas del localstorage
+// Para cargar citas local storage
 document.addEventListener('DOMContentLoaded', function () {
   const citasGuardadas = localStorage.getItem('citas');
   if (citasGuardadas) {
@@ -11,11 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 });
 
-// Esto es para guardar las citas en el local storage
-//cuando se actualice la lista debe cargar
+// Guardar y actualizar
 function actualizarCitas() {
   const citasUl = document.getElementById('citas');
-  citasUl.innerHTML = '';
+  citasUl.innerHTML = '';  
   citas.forEach((cita) => {
     const li = document.createElement('li');
     li.innerHTML = `
@@ -25,11 +22,12 @@ function actualizarCitas() {
     `;
     citasUl.appendChild(li);
   });
+
+  // guardar cita actualizada
   localStorage.setItem('citas', JSON.stringify(citas));
 }
 
-
-// guardado
+// crear y editar
 document.getElementById('citaForm').addEventListener('submit', function (event) {
   event.preventDefault();
 
@@ -39,48 +37,45 @@ document.getElementById('citaForm').addEventListener('submit', function (event) 
   const fecha = document.getElementById('fecha').value;
   const hora = document.getElementById('hora').value;
 
-  const cita = { id: Date.now(), nombre, correo, telefono, fecha, hora };
-  citas.push(cita);
 
-  //Alerta para la cita
-  alert(`Cita agendada:\n\nNombre: ${nombre}\nCorreo: ${correo}\nTeléfono: ${telefono}\nFecha: ${fecha}\nHora: ${hora}`);
+  const id = document.getElementById('citaForm').dataset.id;
   
-  actualizar();
+  //Editar
+  if (id) {
+    const citaEditada = citas.find(cita => cita.id == id);
+    citaEditada.nombre = nombre;
+    citaEditada.correo = correo;
+    citaEditada.telefono = telefono;
+    citaEditada.fecha = fecha;
+    citaEditada.hora = hora;
+    document.getElementById('citaForm').removeAttribute('data-id');
+  } else {
+    const nuevaCita = { id: Date.now(), nombre, correo, telefono, fecha, hora };
+    citas.push(nuevaCita);
+  }
+
+
+  actualizarCitas();
   document.getElementById('citaForm').reset();
+  alert(id ? 'Cita editada.' : 'Cita guardada.');
 });
 
-// esto para actualizar
-//function actualizar() {
- // const citasUl = document.getElementById('citas');
- // citasUl.innerHTML = '';
-  //citas.forEach((cita) => {
-   // const li = document.createElement('li');
-   // li.innerHTML = `
-    //  <strong>${cita.nombre}</strong> - ${cita.fecha} ${cita.hora}
-   //   <button onclick="editar(${cita.id})">Editar</button>
-    //  <button onclick="eliminar(${cita.id})">Eliminar</button>
-   // `;
-   // citasUl.appendChild(li);
-   // });
- // }
-
-// Esto es para editar
 function editarCita(id) {
-  const cita = citas.find((c) => c.id === id);
+  const cita = citas.find(c => c.id === id);
   if (cita) {
     document.getElementById('nombre').value = cita.nombre;
     document.getElementById('correo').value = cita.correo;
     document.getElementById('telefono').value = cita.telefono;
     document.getElementById('fecha').value = cita.fecha;
     document.getElementById('hora').value = cita.hora;
-
-    citas = citas.filter((c) => c.id !== id); 
-    actualizar();
+    
+    document.getElementById('citaForm').dataset.id = cita.id;
   }
 }
 
-// Esto es para eliminar las citas
+// Borrar
 function eliminarCita(id) {
-  citas = citas.filter((c) => c.id !== id);
-  actualizar();
+  citas = citas.filter(cita => cita.id !== id);
+  actualizarCitas(); 
+  alert('Cita eliminada.');
 }
